@@ -1,4 +1,5 @@
 /.idea/
+/local-info.md
 
 ###> symfony/framework-bundle ###
 /.env
