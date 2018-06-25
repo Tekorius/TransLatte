@@ -2,7 +2,10 @@
 
 namespace App\Repository;
 
+use App\Entity\TranslationFile;
 use App\Entity\TranslationKey;
+use App\Model\PaginatedRequest;
+use App\Model\PaginatedResponse;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
@@ -19,32 +22,15 @@ class TranslationKeyRepository extends ServiceEntityRepository
         parent::__construct($registry, TranslationKey::class);
     }
 
-//    /**
-//     * @return TranslationKey[] Returns an array of TranslationKey objects
-//     */
-    /*
-    public function findByExampleField($value)
-    {
-        return $this->createQueryBuilder('t')
-            ->andWhere('t.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('t.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
 
-    /*
-    public function findOneBySomeField($value): ?TranslationKey
+    public function findByTranslationFile(TranslationFile $translationFile, PaginatedRequest $request)
     {
-        return $this->createQueryBuilder('t')
-            ->andWhere('t.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
+        $qb = $this->createQueryBuilder('t')
+            ->select('t')
+            ->where('t.file = :translationFile')
+            ->setParameter('translationFile', $translationFile)
         ;
+
+        return PaginatedResponse::newInstance($request, $qb);
     }
-    */
 }

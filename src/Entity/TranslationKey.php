@@ -31,7 +31,7 @@ class TranslationKey
      * @ORM\JoinColumn(nullable=false)
      */
     private $file;
-    
+
 
     public function getId()
     {

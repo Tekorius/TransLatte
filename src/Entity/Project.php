@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -31,6 +33,16 @@ class Project
      * @ORM\JoinColumn(nullable=false)
      */
     private $organization;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\ProjectUser", mappedBy="project", orphanRemoval=true)
+     */
+    private $projectUsers;
+
+    public function __construct()
+    {
+        $this->projectUsers = new ArrayCollection();
+    }
 
 
     public function getId()
@@ -70,6 +82,37 @@ class Project
     public function setOrganization(?Organization $organization): self
     {
         $this->organization = $organization;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|ProjectUser[]
+     */
+    public function getProjectUsers(): Collection
+    {
+        return $this->projectUsers;
+    }
+
+    public function addProjectUser(ProjectUser $projectUser): self
+    {
+        if (!$this->projectUsers->contains($projectUser)) {
+            $this->projectUsers[] = $projectUser;
+            $projectUser->setProject($this);
+        }
+
+        return $this;
+    }
+
+    public function removeProjectUser(ProjectUser $projectUser): self
+    {
+        if ($this->projectUsers->contains($projectUser)) {
+            $this->projectUsers->removeElement($projectUser);
+            // set the owning side to null (unless already changed)
+            if ($projectUser->getProject() === $this) {
+                $projectUser->setProject(null);
+            }
+        }
 
         return $this;
     }
