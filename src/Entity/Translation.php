@@ -32,7 +32,7 @@ class Translation
     private $description;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\TranslationKey")
+     * @ORM\ManyToOne(targetEntity="App\Entity\TranslationKey", inversedBy="translations")
      * @ORM\JoinColumn(nullable=false)
      */
     private $translationKey;

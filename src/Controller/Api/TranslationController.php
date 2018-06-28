@@ -46,6 +46,8 @@ class TranslationController extends Controller
     {
         $translation = $this->findOrCreateTranslation($request);
 
+        $this->denyAccessUnlessGranted(TranslationVoter::EDIT, $translation);
+
         $form = $this->createPostForm(TranslationForm::class, $translation);
         $this->formParseRequest($request, $form);
 

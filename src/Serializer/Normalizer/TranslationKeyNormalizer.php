@@ -2,6 +2,7 @@
 
 namespace App\Serializer\Normalizer;
 
+use App\Entity\Translation;
 use App\Entity\TranslationKey;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
@@ -30,6 +31,7 @@ class TranslationKeyNormalizer implements NormalizerInterface, NormalizerAwareIn
 
         if ($details) {
             $arr['description'] = $translationKey->getDescription();
+            $arr['translations'] = $this->normalizeTranslations($translationKey, $format, $context);
         }
 
         return $arr;
@@ -38,5 +40,18 @@ class TranslationKeyNormalizer implements NormalizerInterface, NormalizerAwareIn
     public function supportsNormalization($data, $format = null)
     {
         return $data instanceof TranslationKey;
+    }
+
+    private function normalizeTranslations(TranslationKey $translationKey, $format = null, array $context = [])
+    {
+        $ret = [];
+        $translations = $translationKey->getTranslations();
+
+        /** @var Translation $translation */
+        foreach ($translations as $translation) {
+            $ret[$translation->getLocale()] = $this->normalizer->normalize($translation, $format, $context);
+        }
+
+        return $ret;
     }
 }

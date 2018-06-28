@@ -11,7 +11,6 @@ use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
 class TranslationVoter extends Voter
 {
-    const CREATE = 'create';
     const VIEW = 'view';
     const EDIT = 'edit';
 
@@ -28,7 +27,6 @@ class TranslationVoter extends Voter
     protected function supports($attribute, $subject)
     {
         if (!in_array($attribute, [
-            self::CREATE,
             self::VIEW,
             self::EDIT,
         ])) {
@@ -53,9 +51,6 @@ class TranslationVoter extends Voter
         $translation = $subject;
 
         switch ($attribute) {
-            case self::CREATE:
-                return $this->canCreate($translation, $user);
-
             case self::VIEW:
                 return $this->canView($translation, $user);
 
@@ -64,20 +59,6 @@ class TranslationVoter extends Voter
         }
 
         throw new \LogicException('This code should not be reached!');
-    }
-
-    private function canCreate(Translation $translation, User $user)
-    {
-        if (null === $projectUser = $this->getProjectUser($translation, $user)) {
-            return false;
-        }
-
-        return in_array($projectUser->getRole(), [
-            ProjectUser::ROLE_CREATOR,
-            ProjectUser::ROLE_ADMIN,
-            ProjectUser::ROLE_DEVELOPER,
-            ProjectUser::ROLE_TRANSLATOR,
-        ]);
     }
 
     private function canView(Translation $translation, User $user)

@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -31,6 +32,17 @@ class TranslationKey
      * @ORM\JoinColumn(nullable=false)
      */
     private $file;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Translation", mappedBy="translationKey")
+     */
+    private $translations;
+
+
+    public function __construct()
+    {
+        $this->translations = new ArrayCollection();
+    }
 
 
     public function getId()
@@ -72,5 +84,10 @@ class TranslationKey
         $this->file = $file;
 
         return $this;
+    }
+
+    public function getTranslations()
+    {
+        return $this->translations;
     }
 }
