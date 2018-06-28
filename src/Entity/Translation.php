@@ -19,7 +19,7 @@ class Translation
     /**
      * @ORM\Column(type="string", length=10)
      */
-    private $language;
+    private $locale;
 
     /**
      * @ORM\Column(type="text", nullable=true)
@@ -43,14 +43,14 @@ class Translation
         return $this->id;
     }
 
-    public function getLanguage(): ?string
+    public function getLocale(): ?string
     {
-        return $this->language;
+        return $this->locale;
     }
 
-    public function setLanguage(string $language): self
+    public function setLocale(string $locale): self
     {
-        $this->language = $language;
+        $this->locale = $locale;
 
         return $this;
     }
