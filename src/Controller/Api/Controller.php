@@ -4,6 +4,7 @@ namespace App\Controller\Api;
 
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 abstract class Controller extends \Symfony\Bundle\FrameworkBundle\Controller\Controller
 {
@@ -31,5 +32,10 @@ abstract class Controller extends \Symfony\Bundle\FrameworkBundle\Controller\Con
     protected function formParseRequest(Request $request, FormInterface $form)
     {
         $form->submit(json_decode($request->getContent(), true));
+    }
+
+    protected function formError(FormInterface $form)
+    {
+        return $this->json($form, Response::HTTP_BAD_REQUEST);
     }
 }
