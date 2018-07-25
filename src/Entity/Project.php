@@ -39,9 +39,15 @@ class Project
      */
     private $projectUsers;
 
+    private $keyCount;
+
+
     public function __construct()
     {
         $this->projectUsers = new ArrayCollection();
+        $this->keyCount = [
+            'total' => 0,
+        ];
     }
 
 
@@ -115,5 +121,15 @@ class Project
         }
 
         return $this;
+    }
+
+    public function getKeyCount()
+    {
+        return $this->keyCount;
+    }
+
+    public function setKeyCount(string $lang, int $count)
+    {
+        $this->keyCount[$lang] = $count;
     }
 }

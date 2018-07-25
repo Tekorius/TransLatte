@@ -20,17 +20,6 @@ use Symfony\Component\Routing\Annotation\Route;
 class TranslationFileController extends Controller
 {
     /**
-     * @SWG\Response(response=200, description="")
-     *
-     * @Method({"GET"})
-     * @Route("/", name="index")
-     */
-    public function index()
-    {
-        //
-    }
-
-    /**
      * Paginated list of translation keys for translation file
      *
      * @SWG\Response(response=200, description="")

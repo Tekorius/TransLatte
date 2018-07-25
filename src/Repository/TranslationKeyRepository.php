@@ -33,4 +33,33 @@ class TranslationKeyRepository extends ServiceEntityRepository
 
         return PaginatedResponse::newInstance($request, $qb);
     }
+
+    /**
+     * Get and assign counts total key counts to files
+     *
+     * @param TranslationFile[] $files
+     * @return array
+     */
+    public function countForFiles(array $files)
+    {
+        $res = $this->createQueryBuilder('t')
+            ->select('f.id, COUNT(1) as cnt')
+            ->where('t.file in (:files)')
+            ->join('t.file', 'f')
+            ->groupBy('t.file')
+            ->setParameter('files', $files)
+            ->getQuery()
+            ->getScalarResult();
+
+        $cnt = array_combine(
+            array_column($res, 'id'),
+            array_column($res, 'cnt')
+        );
+
+        array_walk($files, function(TranslationFile $f) use ($cnt) {
+            $f->setKeyCount('total', $cnt[$f->getId()]);
+        });
+
+        return $cnt;
+    }
 }

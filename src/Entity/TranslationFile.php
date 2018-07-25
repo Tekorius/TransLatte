@@ -27,6 +27,16 @@ class TranslationFile
      */
     private $project;
 
+    private $keyCount;
+
+
+    public function __construct()
+    {
+        $this->keyCount = [
+            'total' => 0
+        ];
+    }
+
 
     public function getId()
     {
@@ -55,5 +65,15 @@ class TranslationFile
         $this->project = $project;
 
         return $this;
+    }
+
+    public function getKeyCount()
+    {
+        return $this->keyCount;
+    }
+
+    public function setKeyCount(string $lang, int $count)
+    {
+        $this->keyCount[$lang] = $count;
     }
 }

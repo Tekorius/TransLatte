@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\Project;
 use App\Entity\TranslationFile;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
@@ -19,32 +20,20 @@ class TranslationFileRepository extends ServiceEntityRepository
         parent::__construct($registry, TranslationFile::class);
     }
 
-//    /**
-//     * @return TranslationFile[] Returns an array of TranslationFile objects
-//     */
-    /*
-    public function findByExampleField($value)
-    {
-        return $this->createQueryBuilder('t')
-            ->andWhere('t.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('t.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
 
-    /*
-    public function findOneBySomeField($value): ?TranslationFile
+    /**
+     * Find all translation files in the project
+     *
+     * @param Project $project
+     * @return TranslationFile[]
+     */
+    public function findByProject(Project $project)
     {
         return $this->createQueryBuilder('t')
-            ->andWhere('t.exampleField = :val')
-            ->setParameter('val', $value)
+            ->select('t')
+            ->where('t.project = :project')
+            ->setParameter('project', $project)
             ->getQuery()
-            ->getOneOrNullResult()
-        ;
+            ->getResult();
     }
-    */
 }

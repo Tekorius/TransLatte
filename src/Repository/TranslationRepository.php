@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Translation;
+use App\Entity\TranslationFile;
 use App\Entity\TranslationKey;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
@@ -34,5 +35,41 @@ class TranslationRepository extends ServiceEntityRepository
             'translationKey' => $translationKey,
             'locale' => $locale,
         ]);
+    }
+
+    /**
+     * @param TranslationFile[] $files
+     * @return array
+     */
+    public function countForFiles(array $files)
+    {
+        // Fetch counts by different locale
+        $res = $this->createQueryBuilder('t')
+            ->select('f.id, t.locale, COUNT(1) cnt')
+            ->join('t.translationKey', 'k')
+            ->join('k.file', 'f')
+            ->where('f in (:files)')
+            ->groupBy('t.locale')
+            ->setParameter('files', $files)
+            ->getQuery()
+            ->getScalarResult();
+
+        // Merge counts into a nice associative array
+        $cnt = [];
+
+        foreach ($res as $re) {
+            $cnt[$re['id']][$re['locale']] = $re['cnt'];
+        }
+
+        // Assign counts to files
+        array_walk($files, function(TranslationFile $file) use ($cnt) {
+            if (isset($cnt[$file->getId()])) {
+                foreach ($cnt[$file->getId()] as $lang => $count) {
+                    $file->setKeyCount($lang, $count);
+                }
+            }
+        });
+
+        return $cnt;
     }
 }
